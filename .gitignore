@@ -1,0 +1,6 @@
+.idea
+venv/
+tmp/
+ollama/logs
+.DS_Store
+__pycache__

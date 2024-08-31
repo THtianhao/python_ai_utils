@@ -1,0 +1,4 @@
+openai
+requests
+opencv-python
+requests_toolbelt
