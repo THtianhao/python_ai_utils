@@ -4,12 +4,25 @@ import lark_oapi
 
 from crawler.core import CodeWithPaperContent
 
+
+def create_card_message_from_template(template_id: str, version: str, variables: dict):
+    message = {
+        "type": "template",
+        "data": {
+            "template_id": template_id,
+            "template_version_name": version,
+            "template_variable": variables
+        }
+    }
+    return lark_oapi.JSON.marshal(message)
+
+
 def create_card_message(bean_list: list[CodeWithPaperContent]):
     message = {
         "type": "template",
         "data": {
             "template_id": "AAqC9L93wQZRI",
-            "SendImageRequest": "1.0.1",
+            "template_version_name": "1.0.1",
             "template_variable": {
                 "object_list_1": [
                 ]
@@ -17,10 +30,10 @@ def create_card_message(bean_list: list[CodeWithPaperContent]):
         }
     }
     for bean in bean_list:
-       content = f"""<font color='red'>**{bean.title}**</font> <text_tag color="blue">{bean.categorie}</text_tag>
+        content = f"""<font color='red'>**{bean.title}**</font> <text_tag color="blue">{bean.categorie}</text_tag>
 {bean.description}
 [**paper**]({bean.paper_link}) / [github]({bean.code_link}) (⭐️<font color='yellow'>**{bean.stars_count}**</font>) (<font color='green'>**{bean.stars_per_hour}⭐️ / hour**</font>) """
-       message["data"]["template_variable"]["object_list_1"].append({"content": content})
+        message["data"]["template_variable"]["object_list_1"].append({"content": content})
     json_str = lark_oapi.JSON.marshal(message)
     # result = json_str.replace('"', '\\"')
     return json_str
