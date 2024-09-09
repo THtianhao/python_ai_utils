@@ -3,7 +3,6 @@ import os
 from datetime import datetime
 from typing import Any
 
-
 # 使用方法
 #    uvicorn.run(app,
 #                 host="0.0.0.0",
@@ -82,13 +81,13 @@ def get_uvicorn_log_config(base_log_dir):
         "loggers": {
             # 全局配置，error和access都会生效
             "uvicorn": {"handlers": ["default"], "level": "INFO", "propagate": False},
-            "uvicorn.error": {"handlers": ["file_error"], "level": "INFO"},
-            # 普通日志生效
-            "uvicorn.access": {"handlers": ["default", "file_info"], "level": "INFO", "propagate": False},
+            "uvicorn.error": {"handlers": ["file_error"], "level": "ERROR"},
+            # 普通日志生效 只适用于 uvicorn自身，因为对adder进行format等操作
+            "uvicorn.access": {"handlers": ["access", "file_info"], "level": "INFO", "propagate": False},
+            "uvicorn.custom": {"handlers": ["default", "file_info"], "level": "INFO", "propagate": False},
         },
     }
     return LOGGING_CONFIG
 
-
 log_uve = logging.getLogger('uvicorn.error')
-log_uv = logging.getLogger('uvicorn.access')
+log_uv = logging.getLogger('uvicorn.custom')
