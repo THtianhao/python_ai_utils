@@ -84,7 +84,7 @@ def get_uvicorn_log_config(base_log_dir):
             "uvicorn": {"handlers": ["default"], "level": "INFO", "propagate": False},
             "uvicorn.error": {"handlers": ["file_error"], "level": "INFO"},
             # 普通日志生效
-            "uvicorn.access": {"handlers": ["access", "file_info"], "level": "INFO", "propagate": False},
+            "uvicorn.access": {"handlers": ["default", "file_info"], "level": "INFO", "propagate": False},
         },
     }
     return LOGGING_CONFIG
