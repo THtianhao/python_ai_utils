@@ -2,14 +2,15 @@ import logging
 import os
 from datetime import datetime
 from typing import Any
-
+# 设置报警日志
+# error_in_file(app, log_uv,url)
 # 使用方法
-#    uvicorn.run(app,
-#                 host="0.0.0.0",
-#                 port=10090,
-#                 log_level="debug",
-#                 access_log=True,
-#                 log_config=get_uvicorn_log_config(log_path), )
+# uvicorn.run(app,
+#             host="0.0.0.0",
+#             port=10090,
+#             log_level="debug",
+#             access_log=True,
+#             log_config=get_uvicorn_log_config(os.path.join(root_path, "logs")), )
 def get_uvicorn_log_config(base_log_dir):
     log_dirs = {
         'debug': os.path.join(base_log_dir, 'debug'),

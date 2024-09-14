@@ -6,6 +6,7 @@ import inspireface as ifac
 from env import root_path
 from inspireface.param import *
 
+is_launch = False
 race_tags = ["Black", "Asian", "Latino/Hispanic", "Middle Eastern", "White"]
 gender_tags = ["Female", "Male", ]
 age_bracket_tags = ["0-2 years old", "3-9 years old", "10-19 years old", "20-29 years old", "30-39 years old",
@@ -98,9 +99,12 @@ def case_face_detection_image(cv_image):
 
 
 def face_counts(cv_image) -> int:
-    algorithm_name = "Pikachu"
-    ret = ifac.launch(os.path.join(pack_path, algorithm_name))
-    assert ret, "Launch failure. Please ensure the resource path is correct."
+    global is_launch
+    if not is_launch:
+        algorithm_name = "Pikachu"
+        ret = ifac.launch(os.path.join(pack_path, algorithm_name))
+        assert ret, "Launch failure. Please ensure the resource path is correct."
+        is_launch = True
     opt = HF_ENABLE_FACE_RECOGNITION | HF_ENABLE_QUALITY | HF_ENABLE_MASK_DETECT | HF_ENABLE_LIVENESS | HF_ENABLE_INTERACTION | HF_ENABLE_FACE_ATTRIBUTE
     session = ifac.InspireFaceSession(opt, HF_DETECT_MODE_ALWAYS_DETECT)
     faces = session.face_detection(cv_image)

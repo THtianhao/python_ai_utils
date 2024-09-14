@@ -8,7 +8,9 @@ from starlette.responses import JSONResponse
 from python_ai_utils.lark.alarm.lark_api import send_alert_to_feishu
 
 
-def error_in_file(app, log_tool, lark_webhook_url=None):
+# 设置报警日志
+# error_in_file(app, log_uv,url)
+def error_in_file(app, log_tool, lark_webhook_url=None, server_name=''):
     @app.middleware("http")
     async def save_request_body(request: Request, call_next):
         body = await request.body()
@@ -32,7 +34,10 @@ def error_in_file(app, log_tool, lark_webhook_url=None):
             body = getattr(request.state, 'body', None)
         except Exception:
             body = None
-        error_message = f"请求路径: {path}\n请求头: {headers}\n请求查询参数: {query_params}\n请求体: {body}"
+        error_message = ''
+        if server_name:
+            error_message += f"服务名称: {server_name}\n"
+        error_message += f"请求路径: {path}\n请求头: {headers}\n请求查询参数: {query_params}\n请求体: {body}"
         log_tool.error(error_message)
         log_tool.error(f"{e}", exc_info=True)
         if lark_webhook_url:
