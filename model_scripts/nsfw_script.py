@@ -17,7 +17,6 @@ def check_and_download_nsfw_model():
 
 def predict_simge_image(nd_image):
     global model
-    check_and_download_nsfw_model()
     if model is None:
         model = predict.load_model('./nsfw_mobilenet2.224x224.h5')
     list_result = predict.classify_nd(model, nd_image)
