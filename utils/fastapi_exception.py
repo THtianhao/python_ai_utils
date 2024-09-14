@@ -14,10 +14,20 @@ def error_in_file(app, log_tool, lark_webhook_url=None, server_name=''):
     @app.middleware("http")
     async def save_request_body(request: Request, call_next):
         body = await request.body()
-        decode_body = body.decode()
+        decode_body = None
         try:
-            request.state.body = json.dumps(json.loads(decode_body))
+            if body:
+                decode_body = body.decode()
+                if request.headers.get('content-type') == 'application/json':
+                    request.state.body = json.dumps(json.loads(decode_body))
+                else:
+                    request.state.body = decode_body
+            else:
+                request.state.body = None
         except json.JSONDecodeError:
+            request.state.body = decode_body
+        except Exception as e:
+            print(f"Error in save_request_body middleware: {e}")
             request.state.body = None
         response = await call_next(request)
         return response
