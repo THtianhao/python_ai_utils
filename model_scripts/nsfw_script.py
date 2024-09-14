@@ -20,10 +20,11 @@ def predict_simge_image(nd_image):
     check_and_download_nsfw_model()
     if model is None:
         model = predict.load_model('./nsfw_mobilenet2.224x224.h5')
-    result = predict.classify_nd(model, nd_image)
-    print(f'====================')
-    print(f'nsfw result {result}')
-    return result
+    list_result = predict.classify_nd(model, nd_image)
+    if len(list_result) > 0:
+        result = list_result[0]
+        print(f'nsfw result {result}')
+        return result
 
 # Predict single image
 # predict.classify(model, '2.jpg')
