@@ -4,15 +4,13 @@ import io
 from fastapi import UploadFile
 
 
-def file_to_cv2_image(file: UploadFile):
+def byte_to_cv2_image(image_bytes: bytes):
     """
     将 UploadFile 转换为 OpenCV 图像 (cv2.Mat).
 
     :param file: FastAPI 的 UploadFile 对象
     :return: OpenCV 格式的图像 (cv2.Mat)
     """
-    # 读取文件内容为字节流
-    image_bytes = file.file.read()
 
     # 将字节流转换为 OpenCV 格式的图像
     np_arr = np.frombuffer(image_bytes, np.uint8)
@@ -24,7 +22,7 @@ def file_to_cv2_image(file: UploadFile):
     return cv_image
 
 
-def file_to_pil_image(file: UploadFile):
+def byte_to_pil_image(image_bytes: bytes):
     from PIL import Image
     """
     将 UploadFile 转换为 Pillow 图像 (PIL.Image).
@@ -32,15 +30,13 @@ def file_to_pil_image(file: UploadFile):
     :param file: FastAPI 的 UploadFile 对象
     :return: Pillow 格式的图像 (PIL.Image)
     """
-    # 读取文件内容为字节流
-    image_bytes = file.file.read()
 
     # 将字节流转换为 Pillow 格式的图像
     pil_image = Image.open(io.BytesIO(image_bytes))
     return pil_image
 
 
-def file_to_ndarray(file: UploadFile):
+def byte_to_ndarray(image_bytes: bytes):
     """
     将 UploadFile 转换为 NumPy 数组 (ndarray).
 
@@ -48,8 +44,9 @@ def file_to_ndarray(file: UploadFile):
     :return: NumPy 数组格式的图像 (ndarray)
     """
     # 先将文件转换为 Pillow 图像
-    pil_image = file_to_pil_image(file)
+    pil_image = byte_to_pil_image(image_bytes)
 
     # 将 Pillow 图像转换为 NumPy 数组
     np_image = np.array(pil_image)
     return np_image
+

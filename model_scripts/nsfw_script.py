@@ -1,3 +1,6 @@
+import cv2
+import numpy as np
+
 from env import root_path
 from nsfw_model.nsfw_detector import predict
 import os
@@ -25,6 +28,7 @@ def predict_simge_image(nd_image):
         print(f'nsfw result {result}')
         return result
 
+
 # Predict single image
 # predict.classify(model, '2.jpg')
 # {'2.jpg': {'sexy': 4.3454722e-05, 'neutral': 0.00026579265, 'porn': 0.0007733492, 'hentai': 0.14751932, 'drawings': 0.85139805}}
@@ -35,3 +39,35 @@ def predict_simge_image(nd_image):
 
 # Predict for all images in a directory
 # predict.classify(model, '/Users/bedapudi/Desktop/')
+
+
+def process_cv_images(cv_images: list, image_size=(224, 224), verbose=True):
+    '''
+    Function for processing images in cv2 format into numpy arrays for passing to model.predict.
+
+    inputs:
+        cv_images: list of cv2 images (numpy arrays)
+        image_size: size into which images should be resized (height, width)
+        verbose: show processing information
+
+    outputs:
+        processed_images: processed images on which keras model can run predictions
+    '''
+    processed_images = []
+
+    for idx, img in enumerate(cv_images):
+        try:
+            if verbose:
+                print(f"Processing image {idx} with shape: {img.shape}")
+
+            # Resize image
+            img_resized = cv2.resize(img, (image_size[1], image_size[0]))  # OpenCV uses (width, height)
+
+            # Normalize the image array
+            img_array = img_resized.astype(np.float32) / 255.0
+
+            processed_images.append(img_array)
+        except Exception as ex:
+            print(f"Image Processing Failure for image index {idx}: ", ex)
+
+    return np.asarray(processed_images)
